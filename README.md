@@ -31,6 +31,14 @@ Inspired by the [Obsidian Kindle Plugin](https://github.com/hadynz/obsidian-kind
 7. Paste the cookie there and set your `Amazon Region`.
 8. Run the command: **"Kindle Highlights: Sync from Amazon Cloud"**.
 
+> **Note on Cookie Lifespan & Future Syncs**: 
+> You only need to set the cookie **once**. As long as the cookie is valid (usually several months), you can just run the sync command to automatically fetch any **newly read books and new highlights** without updating the cookie. 
+> You will only need to get a new cookie if you explicitly log out of Amazon in your browser, change your password, or if the cookie naturally expires.
+> 
+> **【Cookieの有効期限と自動同期について】**
+> Cookieを設定するのは**最初の1回だけ**でOKです。Cookieが有効な期間（通常は数ヶ月間）は、同期コマンドを実行するだけで**新しく読んだ本や新しいハイライト**が自動的に追加同期されます。
+> ブラウザから手動でログアウトした、パスワードを変更した、またはCookieの期限が切れた場合にのみ、再度Cookieを取り直して設定を更新してください。
+
 ### Method B: Sync via My Clippings.txt
 
 1. Connect your Kindle device to your computer via USB.
