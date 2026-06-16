@@ -2,16 +2,16 @@
   "name": "kindle-highlights",
   "displayName": "Kindle Highlights",
   "description": "Sync your Kindle highlights and notes into Markdown files. Import from My Clippings.txt with customizable Nunjucks templates.",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "publisher": "LoNebula9",
   "license": "MIT",
-  "homepage": "https://github.com/your-username/vscode-kindle-highlights",
+  "homepage": "https://github.com/LoNebula/kindle-highlights",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/vscode-kindle-highlights.git"
+    "url": "https://github.com/LoNebula/kindle-highlights.git"
   },
   "bugs": {
-    "url": "https://github.com/your-username/vscode-kindle-highlights/issues"
+    "url": "https://github.com/LoNebula/kindle-highlights/issues"
   },
   "engines": {
     "vscode": "^1.85.0"
