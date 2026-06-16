@@ -2,7 +2,7 @@
   "name": "kindle-highlights",
   "displayName": "Kindle Highlights",
   "description": "Sync your Kindle highlights and notes into Markdown files. Import from My Clippings.txt with customizable Nunjucks templates.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "LoNebula9",
   "license": "MIT",
   "homepage": "https://github.com/your-username/vscode-kindle-highlights",
@@ -30,6 +30,7 @@
     "reading",
     "book"
   ],
+  "icon": "media/icon.png",
   "galleryBanner": {
     "color": "#0d1117",
     "theme": "dark"
