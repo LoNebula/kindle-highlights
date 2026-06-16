@@ -1,0 +1,162 @@
+{
+  "name": "kindle-highlights",
+  "displayName": "Kindle Highlights",
+  "description": "Sync your Kindle highlights and notes into Markdown files. Import from My Clippings.txt with customizable Nunjucks templates.",
+  "version": "1.0.0",
+  "publisher": "LoNebula9",
+  "license": "MIT",
+  "homepage": "https://github.com/your-username/vscode-kindle-highlights",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/vscode-kindle-highlights.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/vscode-kindle-highlights/issues"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other",
+    "Notebooks"
+  ],
+  "keywords": [
+    "kindle",
+    "highlights",
+    "notes",
+    "markdown",
+    "sync",
+    "clippings",
+    "reading",
+    "book"
+  ],
+  "galleryBanner": {
+    "color": "#0d1117",
+    "theme": "dark"
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "kindle-highlights.syncClippings",
+        "title": "Kindle Highlights: Sync from My Clippings.txt",
+        "icon": "$(sync)"
+      },
+      {
+        "command": "kindle-highlights.openPanel",
+        "title": "Kindle Highlights: Open Panel",
+        "icon": "$(book)"
+      },
+      {
+        "command": "kindle-highlights.openSettings",
+        "title": "Kindle Highlights: Open Settings"
+      },
+      {
+        "command": "kindle-highlights.editTemplate",
+        "title": "Kindle Highlights: Edit Template"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "kindle-highlights",
+          "title": "Kindle Highlights",
+          "icon": "media/kindle-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "kindle-highlights": [
+        {
+          "id": "kindle-highlights.booksView",
+          "name": "Books",
+          "type": "webview"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Kindle Highlights",
+      "properties": {
+        "kindleHighlights.outputFolder": {
+          "type": "string",
+          "default": "C:\\obsidian\\00_note\\02_book",
+          "markdownDescription": "Output folder for Markdown files. **Absolute path** (e.g. `C:\\obsidian\\00_note\\02_book`) or relative path from workspace root."
+        },
+        "kindleHighlights.fileNameTemplate": {
+          "type": "string",
+          "default": "{{ author }}-{{ title }}",
+          "markdownDescription": "Nunjucks template for file names. Available: `{{ title }}`, `{{ author }}`, `{{ asin }}`. Example: `{{ author }}-{{ title }}`"
+        },
+        "kindleHighlights.highlightTemplate": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Nunjucks template for Markdown output. Leave empty to use the built-in default template. Use **Kindle Highlights: Edit Template** command for a live preview editor.",
+          "editPresentation": "multilineText"
+        },
+        "kindleHighlights.lastClippingsPath": {
+          "type": "string",
+          "default": "",
+          "description": "Last used My Clippings.txt path (set automatically)"
+        },
+        "kindleHighlights.syncOnStartup": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically prompt to re-sync from the last clippings file on startup"
+        },
+        "kindleHighlights.ignoreBooks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "List of book titles to skip during sync"
+        }
+      }
+    },
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "kindle-highlights.syncClippings"
+        },
+        {
+          "command": "kindle-highlights.openPanel"
+        },
+        {
+          "command": "kindle-highlights.editTemplate"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "kindle-highlights.syncClippings",
+        "key": "ctrl+shift+k",
+        "mac": "cmd+shift+k"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "lint": "eslint src --ext ts",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@types/nunjucks": "^3.2.6",
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@vscode/vsce": "^2.24.0",
+    "eslint": "^8.0.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "nunjucks": "^3.2.4"
+  }
+}
