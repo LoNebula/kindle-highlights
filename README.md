@@ -20,21 +20,28 @@ Inspired by the [Obsidian Kindle Plugin](https://github.com/hadynz/obsidian-kind
 
 ## Getting Started
 
-### 1. Get your My Clippings.txt file
+### Method A: Sync from Amazon Cloud (Recommended)
 
-1. Connect your Kindle device to your computer via USB
-2. Navigate to the `documents` folder on your Kindle
-3. Find and copy `My Clippings.txt`
+1. Open your browser and log in to [Amazon Kindle Notebook](https://read.amazon.co.jp/notebook) (or your region's equivalent like `read.amazon.com/notebook`).
+2. Open Developer Tools (F12 or Ctrl+Shift+I).
+3. Go to the **Network** tab and refresh the page.
+4. Click on the very first request (usually `notebook`) and scroll down to **Request Headers**.
+5. Copy the entire value of the `cookie:` field (it starts with `session-id=...`).
+6. In VSCode, open settings (`Ctrl+,`) and search for `Kindle Highlights: Amazon Cookie`.
+7. Paste the cookie there and set your `Amazon Region`.
+8. Run the command: **"Kindle Highlights: Sync from Amazon Cloud"**.
 
-### 2. Sync your highlights
+### Method B: Sync via My Clippings.txt
 
-- Press `Ctrl+Shift+K` (`Cmd+Shift+K` on Mac), or
-- Open the Command Palette (`Ctrl+Shift+P`) and run **"Kindle Highlights: Sync from My Clippings.txt"**
-- Select your `My Clippings.txt` file
+1. Connect your Kindle device to your computer via USB.
+2. Navigate to the `documents` folder on your Kindle.
+3. Find and copy `My Clippings.txt`.
+4. Run the command: **"Kindle Highlights: Sync from My Clippings.txt"**.
+5. Select your `My Clippings.txt` file.
 
-### 3. Find your Markdown files
+### Find your Markdown files
 
-Your highlights will be saved to the folder specified in settings (default: `Kindle Highlights/` in your workspace root).
+Your highlights will be saved to the folder specified in settings (default: `C:\obsidian\00_note\02_book`).
 
 ---
 
@@ -108,7 +115,8 @@ by {{ author }}
 
 | Command | Shortcut | Description |
 |---------|----------|-------------|
-| Kindle Highlights: Sync from My Clippings.txt | `Ctrl+Shift+K` | Import and sync highlights |
+| Kindle Highlights: Sync from Amazon Cloud | — | Fetch highlights directly from Amazon |
+| Kindle Highlights: Sync from My Clippings.txt | `Ctrl+Shift+K` | Import from local clippings file |
 | Kindle Highlights: Open Panel | — | Open the books browser |
 | Kindle Highlights: Open Settings | — | Open extension settings |
 

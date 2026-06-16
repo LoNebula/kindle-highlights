@@ -39,6 +39,8 @@ export interface ExtensionSettings {
   lastClippingsPath: string;
   syncOnStartup: boolean;
   ignoreBooks: string[];
+  amazonRegion: string;
+  amazonCookie: string;
 }
 
 export interface ParsedClipping {

@@ -16,6 +16,8 @@ export class SettingsManager {
       lastClippingsPath: config.get<string>('lastClippingsPath', ''),
       syncOnStartup: config.get<boolean>('syncOnStartup', false),
       ignoreBooks: config.get<string[]>('ignoreBooks', []),
+      amazonRegion: config.get<string>('amazonRegion', 'read.amazon.co.jp'),
+      amazonCookie: config.get<string>('amazonCookie', ''),
     };
   }
 

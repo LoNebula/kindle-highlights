@@ -2,7 +2,7 @@
   "name": "kindle-highlights",
   "displayName": "Kindle Highlights",
   "description": "Sync your Kindle highlights and notes into Markdown files. Import from My Clippings.txt with customizable Nunjucks templates.",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "publisher": "LoNebula9",
   "license": "MIT",
   "homepage": "https://github.com/your-username/vscode-kindle-highlights",
@@ -45,6 +45,11 @@
         "command": "kindle-highlights.syncClippings",
         "title": "Kindle Highlights: Sync from My Clippings.txt",
         "icon": "$(sync)"
+      },
+      {
+        "command": "kindle-highlights.syncAmazon",
+        "title": "Kindle Highlights: Sync from Amazon Cloud",
+        "icon": "$(cloud-download)"
       },
       {
         "command": "kindle-highlights.openPanel",
@@ -114,6 +119,17 @@
           },
           "default": [],
           "description": "List of book titles to skip during sync"
+        },
+        "kindleHighlights.amazonRegion": {
+          "type": "string",
+          "default": "read.amazon.co.jp",
+          "enum": ["read.amazon.co.jp", "read.amazon.com", "read.amazon.co.uk", "read.amazon.de", "read.amazon.fr", "read.amazon.in", "read.amazon.it", "read.amazon.es", "read.amazon.com.br", "read.amazon.com.mx", "read.amazon.com.au"],
+          "description": "Amazon region domain for Cloud Sync"
+        },
+        "kindleHighlights.amazonCookie": {
+          "type": "string",
+          "default": "",
+          "description": "Amazon session cookie for Cloud Sync (e.g. session-id=...; session-token=...). See README for instructions on how to get this."
         }
       }
     },
@@ -121,6 +137,9 @@
       "commandPalette": [
         {
           "command": "kindle-highlights.syncClippings"
+        },
+        {
+          "command": "kindle-highlights.syncAmazon"
         },
         {
           "command": "kindle-highlights.openPanel"
@@ -148,8 +167,8 @@
     "publish": "vsce publish"
   },
   "devDependencies": {
-    "@types/nunjucks": "^3.2.6",
     "@types/node": "^20.0.0",
+    "@types/nunjucks": "^3.2.6",
     "@types/vscode": "^1.85.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
@@ -158,6 +177,8 @@
     "typescript": "^5.3.0"
   },
   "dependencies": {
+    "axios": "^1.18.0",
+    "cheerio": "^1.2.0",
     "nunjucks": "^3.2.4"
   }
 }

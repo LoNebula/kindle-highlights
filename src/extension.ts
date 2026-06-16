@@ -144,6 +144,129 @@ export function activate(context: vscode.ExtensionContext): void {
   );
 
   // ──────────────────────────────────────────────────────────────────────────
+  // Command: Sync from Amazon Cloud
+  // ──────────────────────────────────────────────────────────────────────────
+  const syncAmazonCommand = vscode.commands.registerCommand(
+    'kindle-highlights.syncAmazon',
+    async () => {
+      const settings = settingsManager.getSettings();
+
+      if (!settings.amazonCookie) {
+        const action = await vscode.window.showWarningMessage(
+          'Amazon Cookie is not set. Please set your session cookie in settings first.',
+          'Open Settings',
+          'How to get cookie'
+        );
+        if (action === 'Open Settings') {
+          vscode.commands.executeCommand('workbench.action.openSettings', 'kindleHighlights.amazonCookie');
+        } else if (action === 'How to get cookie') {
+          vscode.env.openExternal(vscode.Uri.parse('https://github.com/your-username/vscode-kindle-highlights#how-to-get-your-amazon-cookie'));
+        }
+        return;
+      }
+
+      const { AmazonScraper } = await import('./amazonScraper');
+      const scraper = new AmazonScraper(settings.amazonRegion, settings.amazonCookie);
+
+      // Show panel and start syncing
+      KindleHighlightsPanel.createOrShow(context.extensionUri, currentBooks, {
+        onSyncRequested: () => vscode.commands.executeCommand('kindle-highlights.syncAmazon'),
+        onOpenSettings: () => vscode.commands.executeCommand('workbench.action.openSettings', 'kindleHighlights'),
+        onOpenBook: (book) => fileManager.openBook(book, settingsManager.getSettings()),
+        onIgnoreBook: async (title) => {
+          await settingsManager.addIgnoredBook(title);
+          vscode.window.showInformationMessage(`"${title}" added to ignore list.`);
+        },
+      });
+
+      KindleHighlightsPanel.currentPanel?.showSyncing();
+
+      await vscode.window.withProgress(
+        {
+          location: vscode.ProgressLocation.Notification,
+          title: 'Kindle Highlights: Syncing from Amazon Cloud...',
+          cancellable: true,
+        },
+        async (progress, token) => {
+          try {
+            progress.report({ message: 'Fetching book list...' });
+            const books = await scraper.getBooks();
+
+            if (books.length === 0) {
+              vscode.window.showWarningMessage('No books found. Cookie might be invalid or expired.');
+              KindleHighlightsPanel.currentPanel?.showSyncComplete(0, 0);
+              return;
+            }
+
+            const bookHighlights: BookHighlight[] = [];
+            let currentBookIndex = 0;
+
+            for (const book of books) {
+              if (token.isCancellationRequested) break;
+              
+              currentBookIndex++;
+              progress.report({ 
+                message: `Downloading: ${book.title}`, 
+                increment: (1 / books.length) * 50 
+              });
+
+              // Skip ignored books early to save API calls
+              if (settings.ignoreBooks.some(ignored => ignored.toLowerCase() === book.title.toLowerCase())) {
+                continue;
+              }
+
+              const highlights = await scraper.getBookHighlights(book, (msg) => {
+                progress.report({ message: `Downloading: ${book.title} (${msg})` });
+              });
+
+              if (highlights.length > 0) {
+                bookHighlights.push({ book, highlights });
+              }
+            }
+
+            if (token.isCancellationRequested) {
+              vscode.window.showInformationMessage('Sync cancelled.');
+              KindleHighlightsPanel.currentPanel?.showSyncComplete(0, 0);
+              return;
+            }
+
+            // Sync to files
+            progress.report({ message: `Saving ${bookHighlights.length} books to disk...` });
+            const result = await fileManager.syncBooks(
+              bookHighlights,
+              settingsManager.getSettings(),
+              progress
+            );
+
+            currentBooks = bookHighlights;
+
+            // Update panel
+            KindleHighlightsPanel.currentPanel?.update(bookHighlights);
+            KindleHighlightsPanel.currentPanel?.showSyncComplete(result.newBooks, result.updatedBooks);
+
+            // Show result
+            let message = `✅ Cloud Sync complete! ${result.newBooks} new, ${result.updatedBooks} updated`;
+            if (result.skippedBooks > 0) {
+              message += `, ${result.skippedBooks} skipped`;
+            }
+
+            const action = await vscode.window.showInformationMessage(message, 'Open Folder');
+            if (action === 'Open Folder') {
+              const outputFolder = await fileManager.getOutputFolder(settings);
+              vscode.commands.executeCommand('revealFileInOS', vscode.Uri.file(outputFolder));
+            }
+
+          } catch (error) {
+            const msg = error instanceof Error ? error.message : String(error);
+            vscode.window.showErrorMessage(`Amazon Sync failed: ${msg}`);
+            KindleHighlightsPanel.currentPanel?.showSyncComplete(0, 0);
+          }
+        }
+      );
+    }
+  );
+
+  // ──────────────────────────────────────────────────────────────────────────
   // Command: Open Panel
   // ──────────────────────────────────────────────────────────────────────────
   const openPanelCommand = vscode.commands.registerCommand(
@@ -226,6 +349,7 @@ export function activate(context: vscode.ExtensionContext): void {
   // Register all disposables
   context.subscriptions.push(
     syncCommand,
+    syncAmazonCommand,
     openPanelCommand,
     openSettingsCommand,
     editTemplateCommand,
