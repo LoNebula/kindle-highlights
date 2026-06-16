@@ -11,8 +11,8 @@ export class SettingsManager {
     const config = vscode.workspace.getConfiguration(this.CONFIG_SECTION);
     return {
       outputFolder: config.get<string>('outputFolder', 'C:\\obsidian\\00_note\\02_book'),
-      fileNameTemplate: config.get<string>('fileNameTemplate', '{{ author }}-{{ title }}'),
-      highlightTemplate: config.get<string>('highlightTemplate', this.getDefaultTemplate()),
+      fileNameTemplate: config.get<string>('fileNameTemplate') || '{{ author }}-{{ title }}',
+      highlightTemplate: config.get<string>('highlightTemplate') || this.getDefaultTemplate(),
       lastClippingsPath: config.get<string>('lastClippingsPath', ''),
       syncOnStartup: config.get<boolean>('syncOnStartup', false),
       ignoreBooks: config.get<string[]>('ignoreBooks', []),

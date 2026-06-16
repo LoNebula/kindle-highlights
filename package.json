@@ -2,7 +2,7 @@
   "name": "kindle-highlights",
   "displayName": "Kindle Highlights",
   "description": "Sync your Kindle highlights and notes into Markdown files. Import from My Clippings.txt with customizable Nunjucks templates.",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "publisher": "LoNebula9",
   "license": "MIT",
   "homepage": "https://github.com/your-username/vscode-kindle-highlights",
@@ -129,7 +129,9 @@
         "kindleHighlights.amazonCookie": {
           "type": "string",
           "default": "",
-          "description": "Amazon session cookie for Cloud Sync (e.g. session-id=...; session-token=...). See README for instructions on how to get this."
+          "description": "Amazon session cookie for Cloud Sync (e.g. session-id=...; session-token=...). See README for instructions on how to get this.",
+          "editPresentation": "multilineText",
+          "order": 1
         }
       }
     },
