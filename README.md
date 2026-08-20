@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/hero.svg" alt="📚 Kindle Highlights — VS Code Sync & Note Manager Hero Banner" width="100%" />
+  <img src="assets/hero.png" alt="📚 Kindle Highlights — VS Code Sync & Note Manager Hero Banner" width="100%" />
 </p>
 
 <h1 align="center">📚 Kindle Highlights — VS Code Sync & Note Manager</h1>
