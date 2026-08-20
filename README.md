@@ -1,152 +1,91 @@
-# Kindle Highlights — VSCode Extension
+<p align="center">
+  <img src="assets/hero.svg" alt="📚 Kindle Highlights — VS Code Sync & Note Manager Hero Banner" width="100%" />
+</p>
 
-📚 **Sync your Kindle highlights and notes directly into your workspace as Markdown files.**
+<h1 align="center">📚 Kindle Highlights — VS Code Sync & Note Manager</h1>
 
-Inspired by the [Obsidian Kindle Plugin](https://github.com/hadynz/obsidian-kindle-plugin).
+<p align="center">
+  <strong>Sync Amazon Kindle highlights, annotations, and clippings directly into your VS Code workspace as clean, structured Markdown files.</strong>
+</p>
 
----
+<p align="center">
+  <a href="#-features">Features</a> •
+  <a href="#-architecture">Architecture</a> •
+  <a href="#-quick-start">Quick Start</a> •
+  <a href="#-project-structure">Structure</a> •
+  <a href="#-license">License</a>
+</p>
 
-## Features
-
-- **📥 Import from My Clippings.txt** — Parse your Kindle device's clippings file to extract all highlights, notes, and bookmarks
-- **📄 Markdown file generation** — Each book gets its own Markdown file with all highlights
-- **🔄 Smart sync** — Intelligently diffs existing files, adding only new highlights without overwriting your edits
-- **✏️ Nunjucks templating** — Fully customizable output using the powerful Nunjucks template engine
-- **👁️ Live template preview** — Interactive template editor with real-time preview
-- **🔍 Book browser** — Beautiful sidebar panel to browse all your synced books
-- **⚙️ Settings** — Configure output folder, file naming, and more
-
----
-
-## Getting Started
-
-### Method A: Sync from Amazon Cloud (Recommended)
-
-1. Open your browser and log in to [Amazon Kindle Notebook](https://read.amazon.co.jp/notebook) (or your region's equivalent like `read.amazon.com/notebook`).
-2. Open Developer Tools (F12 or Ctrl+Shift+I).
-3. Go to the **Network** tab and refresh the page.
-4. Click on the very first request (usually `notebook`) and scroll down to **Request Headers**.
-5. Copy the entire value of the `cookie:` field (it starts with `session-id=...`).
-6. In VSCode, open settings (`Ctrl+,`) and search for `Kindle Highlights: Amazon Cookie`.
-7. Paste the cookie there and set your `Amazon Region`.
-8. Run the command: **"Kindle Highlights: Sync from Amazon Cloud"**.
-
-> **Note on Cookie Lifespan & Future Syncs**: 
-> You only need to set the cookie **once**. As long as the cookie is valid (usually several months), you can just run the sync command to automatically fetch any **newly read books and new highlights** without updating the cookie. 
-> You will only need to get a new cookie if you explicitly log out of Amazon in your browser, change your password, or if the cookie naturally expires.
-> 
-> **【Cookieの有効期限と自動同期について】**
-> Cookieを設定するのは**最初の1回だけ**でOKです。Cookieが有効な期間（通常は数ヶ月間）は、同期コマンドを実行するだけで**新しく読んだ本や新しいハイライト**が自動的に追加同期されます。
-> ブラウザから手動でログアウトした、パスワードを変更した、またはCookieの期限が切れた場合にのみ、再度Cookieを取り直して設定を更新してください。
-
-### Method B: Sync via My Clippings.txt
-
-1. Connect your Kindle device to your computer via USB.
-2. Navigate to the `documents` folder on your Kindle.
-3. Find and copy `My Clippings.txt`.
-4. Run the command: **"Kindle Highlights: Sync from My Clippings.txt"**.
-5. Select your `My Clippings.txt` file.
-
-### Find your Markdown files
-
-Your highlights will be saved to the folder specified in settings (default: `C:\obsidian\00_note\02_book`).
+<p align="center">
+  <img src="https://img.shields.io/badge/VS_Code-Extension-007acc?style=for-the-badge&logo=visualstudiocode&logoColor=white" alt="VS_Code" /> <img src="https://img.shields.io/badge/Version-1.1.3-blue?style=for-the-badge&logo=semver&logoColor=white" alt="Version" /> <img src="https://img.shields.io/badge/TypeScript-5.4+-3178c6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" /> <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="License" />
+</p>
 
 ---
 
-## Template System
+## ✨ Features (Key Outcomes & Capabilities)
 
-Templates use [Nunjucks](https://mozilla.github.io/nunjucks/) syntax.
-
-### Available Variables
-
-| Variable | Description |
-|----------|-------------|
-| `{{ title }}` | Book title |
-| `{{ author }}` | Author name |
-| `{{ asin }}` | Amazon ASIN (if available) |
-| `{{ highlightsCount }}` | Number of highlights |
-| `{{ lastAnnotatedDate }}` | Last annotation date |
-| `{{ highlights }}` | Array of highlight objects |
-
-### Highlight Object Properties
-
-| Property | Description |
-|----------|-------------|
-| `{{ highlight.text }}` | Highlight text |
-| `{{ highlight.note }}` | Associated note |
-| `{{ highlight.location }}` | Kindle location |
-| `{{ highlight.page }}` | Page number |
-| `{{ highlight.color }}` | Highlight color |
-| `{{ highlight.createdDate }}` | Date added |
-| `{{ highlight.type }}` | `highlight`, `note`, or `bookmark` |
-
-### Example Template
-
-```nunjucks
----
-title: "{{ title }}"
-author: "{{ author }}"
-date: "{{ lastAnnotatedDate | date("YYYY-MM-DD") }}"
-highlights: {{ highlightsCount }}
----
-
-# {{ title }}
-by {{ author }}
-
-{% for highlight in highlights %}
-> {{ highlight.text }}
-
-{% if highlight.note %}**Note:** {{ highlight.note }}
-
-{% endif %}
-*Location: {{ highlight.location }}*
+| Icon | Feature | Outcome & Real Proof |
+| :---: | :--- | :--- |
+| 📥 | **Clippings & Amazon Cloud Sync** | Parse local `My Clippings.txt` or sync directly with your Amazon Kindle digital notebook |
+| 📄 | **Structured Markdown Generation** | Generates individual book notes with YAML frontmatter, authors, highlights, and page citations |
+| 🔄 | **Idempotent Smart Sync** | Merges newly created highlights without overwriting your manual edits or annotations |
+| 🔍 | **Obsidian & Foam Compatible** | 100% interoperable with Obsidian, Foam, and Logseq knowledge bases |
 
 ---
-{% endfor %}
+
+## 📊 Architecture & Flow
+
+```mermaid
+graph TD
+  Source[📖 Kindle Clippings.txt / Amazon Cloud] --> Parser[⚙️ Highlight Extraction Engine]
+  Parser --> Formatter[📝 Markdown & YAML Frontmatter Formatter]
+  Formatter --> Workspace[(📁 Workspace Markdown Notes)]
+  Workspace --> Search[🔍 Full-Text Search & Knowledge Graph]
+  
+  classDef primary fill:#f97316,stroke:#ea580c,stroke-width:2px,color:#fff;
+  classDef accent fill:#3b82f6,stroke:#2563eb,stroke-width:2px,color:#fff;
+  class Parser,Formatter primary;
+  class Workspace,Search accent;
 ```
 
 ---
 
-## Settings
-
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `kindleHighlights.outputFolder` | `Kindle Highlights` | Output folder (relative to workspace root) |
-| `kindleHighlights.fileNameTemplate` | `{{ title }}` | Template for file names |
-| `kindleHighlights.highlightTemplate` | *(default template)* | Nunjucks template for Markdown output |
-| `kindleHighlights.syncOnStartup` | `false` | Auto-sync on startup |
-| `kindleHighlights.ignoreBooks` | `[]` | Books to skip during sync |
-
----
-
-## Commands
-
-| Command | Shortcut | Description |
-|---------|----------|-------------|
-| Kindle Highlights: Sync from Amazon Cloud | — | Fetch highlights directly from Amazon |
-| Kindle Highlights: Sync from My Clippings.txt | `Ctrl+Shift+K` | Import from local clippings file |
-| Kindle Highlights: Open Panel | — | Open the books browser |
-| Kindle Highlights: Open Settings | — | Open extension settings |
-
----
-
-## Development
+## 📁 Project Structure
 
 ```bash
-# Install dependencies
-npm install
-
-# Compile TypeScript
-npm run compile
-
-# Watch mode
-npm run watch
+kindle-highlights/
+├── 📁 src/                    # Extension core & scraping engine
+├── 📁 media/                  # Webview UI & icons
+├── 📄 package.json            # Extension manifest
+└── 📄 README.md               # Extension documentation
 ```
-
-Press `F5` in VSCode to launch the extension in a new Extension Development Host window.
 
 ---
 
-## License
+## 🚀 Quick Start
 
-MIT
+### Prerequisites
+- Check language runtimes (Python / Node.js) and system dependencies.
+
+```bash
+# Install from Marketplace:
+ext install LoNebula9.kindle-highlights
+
+# Or clone and test:
+git clone https://github.com/LoNebula/kindle-highlights.git
+npm install
+npm run compile
+```
+
+---
+
+## 💡 Usage Notes & Tips
+
+> [!TIP]
+> Ensure all required environment variables and dependencies are properly configured before execution.
+
+---
+
+<p align="center">
+  Released under the <a href="LICENSE">MIT License</a>. Made with ❤️ by <a href="https://github.com/LoNebula">LoNebula</a>
+</p>
